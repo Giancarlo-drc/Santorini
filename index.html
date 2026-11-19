@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Diagrama de Gantt - Plan Integral Santorini</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, Tahoma, Arial, sans-serif;
+    background: #f5f7fa;
+    padding: 30px 15px;
+    color: #263238;
+  }
+  .container {
+    max-width: 1350px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 30px rgba(38,50,56,0.08);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  .header h1 {
+    color: #263238;
+    font-size: 24px;
+    letter-spacing: 2px;
+    font-weight: 800;
+  }
+  .header h2 {
+    color: #1976d2;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+  .header .sub {
+    color: #78909c;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  table.gantt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    table-layout: fixed;
+  }
+  .gantt col.col-task { width: 31%; }
+  .gantt col.col-month { width: 11.5%; }
+
+  .gantt thead th {
+    background: #263238;
+    color: #fff;
+    padding: 12px 6px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .gantt thead th:first-child {
+    text-align: left;
+    padding-left: 16px;
+  }
+  .gantt thead th small {
+    display: block;
+    font-weight: 400;
+    font-size: 10.5px;
+    color: #90a4ae;
+    margin-top: 3px;
+  }
+
+  .gantt tbody td {
+    padding: 7px 6px;
+    border-bottom: 1px solid #eceff1;
+    height: 40px;
+    vertical-align: middle;
+  }
+  .gantt tbody td.task {
+    text-align: left;
+    padding-left: 14px;
+    color: #37474f;
+    font-weight: 500;
+  }
+  .gantt tbody td.task .num {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #eceff1;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 10px;
+    color: #546e7a;
+    font-weight: 800;
+    margin-right: 8px;
+  }
+
+  .gantt tbody tr.category-row td.task {
+    font-weight: 800;
+    color: #263238;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    letter-spacing: 1px;
+    padding-top: 14px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #1976d2;
+    background: #f5f7fa;
+  }
+  .gantt tbody tr.category-row td {
+    background: #f5f7fa;
+    border-bottom: 2px solid #1976d2;
+  }
+
+  .gantt tbody td.bar {
+    padding: 6px 4px;
+    text-align: center;
+  }
+  .gantt tbody td.bar span {
+    display: block;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.08);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 8px;
+    transition: transform 0.15s ease;
+  }
+  .gantt tbody td.bar span:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Paleta Material Design */
+  .bar-blue span   { background: linear-gradient(135deg, #42a5f5, #1976d2); }   /* Blue 400 → 700 */
+  .bar-teal span   { background: linear-gradient(135deg, #26c6da, #00897b); }   /* Cyan 400 → Teal 600 */
+  .bar-gold span   { background: linear-gradient(135deg, #ffca28, #f57c00); }   /* Amber 400 → Orange 700 */
+  .bar-green span  { background: linear-gradient(135deg, #66bb6a, #2e7d32); }   /* Green 400 → 800 */
+  .bar-purple span { background: linear-gradient(135deg, #9575cd, #512da8); }   /* Deep Purple 300 → 700 */
+  .bar-orange span { background: linear-gradient(135deg, #ffa726, #e65100); }   /* Orange 400 → 900 */
+  .bar-pink span   { background: linear-gradient(135deg, #ec407a, #ad1457); }   /* Pink 400 → 800 */
+
+  .legend {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    justify-content: center;
+    padding-top: 20px;
+    border-top: 1px solid #eceff1;
+    font-size: 11.5px;
+    color: #455a64;
+    font-weight: 600;
+  }
+  .legend .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend .swatch {
+    width: 24px;
+    height: 14px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .footer {
+    margin-top: 22px;
+    text-align: center;
+    color: #90a4ae;
+    font-size: 10.5px;
+    font-style: italic;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .container { box-shadow: none; padding: 15px; }
+    .gantt thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .gantt tbody td.bar span { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .legend .swatch { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>DIAGRAMA DE GANTT</h1>
+    <h2>Plan Integral de Trabajo 6 Meses (MBO) · Inmobiliaria Santorini</h2>
+    <div class="sub">Área Comercial y Marketing · Noviembre 2026 – Abril 2027</div>
+  </div>
+
+  <table class="gantt">
+    <colgroup>
+      <col class="col-task">
+      <col class="col-month"><col class="col-month"><col class="col-month">
+      <col class="col-month"><col class="col-month"><col class="col-month">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Actividad / Estrategia</th>
+        <th>MES 1<small>Nov 2026</small></th>
+        <th>MES 2<small>Dic 2026</small></th>
+        <th>MES 3<small>Ene 2027</small></th>
+        <th>MES 4<small>Feb 2027</small></th>
+        <th>MES 5<small>Mar 2027</small></th>
+        <th>MES 6<small>Abr 2027</small></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ========== CATEGORÍA 1 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">1. Infraestructura y Desarrollo</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">1</span>Creación Página Web (Costo S/ 0)</td>
+        <td colspan="2" class="bar bar-blue"><span>Diseño y Lanzamiento Web 🏁</span></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">2</span>Integración CRM + API WhatsApp</td>
+        <td colspan="2" class="bar bar-blue"><span>Configuración CRM + API 🏁</span></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">3</span>Capacitación TI (Jhoes) en Meta Ads</td>
+        <td colspan="2" class="bar bar-blue"><span>Capacitación y Traspaso 🏁</span></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">4</span>Transición Agencia Externa → Interno</td>
+        <td colspan="2" class="bar bar-blue"><span>Transición Operativa 🏁</span></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+
+      <!-- ========== CATEGORÍA 2 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">2. Campañas Digitales</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">5</span>Campañas de Prueba (Familiar / Invers.)</td>
+        <td colspan="2" class="bar bar-teal"><span>Test A/B y Optimización 🏁</span></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">6</span>Campañas 100% Internas (Pauta)</td>
+        <td></td><td></td>
+        <td colspan="4" class="bar bar-teal"><span>Pauta Meta Ads · Escalado y Optimización Continua 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">7</span>Retargeting Web y Redes</td>
+        <td></td><td></td>
+        <td colspan="4" class="bar bar-teal"><span>Remarketing a Base de Datos y Visitantes 🏁</span></td>
+      </tr>
+
+      <!-- ========== CATEGORÍA 3 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">3. Marketing Offline y B2B</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">8</span>Activación Mercado Z</td>
+        <td class="bar bar-gold"><span>Mercado Z 🏁</span></td>
+        <td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">9</span>Activación Santa Rosa / Reque / Monsefú</td>
+        <td colspan="6" class="bar bar-gold"><span>Activaciones Rotativas: Santa Rosa → Reque → Monsefú 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">10</span>Prospección B2B (Empresas / Colegios)</td>
+        <td colspan="6" class="bar bar-gold"><span>Prospección B2B Continua · Charlas Corporativas 🏁</span></td>
+      </tr>
+
+      <!-- ========== CATEGORÍA 4 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">4. Producción de Contenido</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">11</span>Brochures y Flyers</td>
+        <td colspan="6" class="bar bar-orange"><span>Diseño y Actualización Continua de Material POP 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">12</span>Videos Promocionales (Piloto y Testimonios)</td>
+        <td colspan="6" class="bar bar-orange"><span>Producción Audiovisual Continua · Piloto · Testimonios · Drone 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">13</span>Contenido para Redes Sociales</td>
+        <td colspan="6" class="bar bar-orange"><span>Calendario Mensual · Reels · Stories · Carruseles 🏁</span></td>
+      </tr>
+
+      <!-- ========== CATEGORÍA 5 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">5. Equipo Comercial</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">14</span>Reclutamiento Escalonado (3 → 15 personas)</td>
+        <td colspan="6" class="bar bar-green"><span>Contratación por Fases · Pase a Planilla PYME en Mes 3 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">15</span>Capacitación Continua y Roleplay</td>
+        <td colspan="6" class="bar bar-green"><span>Coaching Semanal · Manejo de Objeciones · Cierre 🏁</span></td>
+      </tr>
+
+      <!-- ========== CATEGORÍA 6 ========== -->
+      <tr class="category-row"><td class="task" colspan="7">6. Análisis y Control</td></tr>
+
+      <tr>
+        <td class="task"><span class="num">16</span>Reporte Semanal de KPIs (CPL / Leads)</td>
+        <td colspan="6" class="bar bar-purple"><span>Revisión Semanal (Lunes 30 min) · Ajuste Continuo 🏁</span></td>
+      </tr>
+      <tr>
+        <td class="task"><span class="num">17</span>Revisión MBO y Pago de Bonos</td>
+        <td colspan="6" class="bar bar-purple"><span>Cierre Mensual · Evaluación de Metas · Pago de Comisiones y Bonos 🏁</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#42a5f5,#1976d2)"></div>Infraestructura</div>
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#26c6da,#00897b)"></div>Campañas Digitales</div>
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#ffca28,#f57c00)"></div>Marketing Offline / B2B</div>
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#ffa726,#e65100)"></div>Contenido</div>
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#66bb6a,#2e7d32)"></div>Equipo Comercial</div>
+    <div class="item"><div class="swatch" style="background:linear-gradient(135deg,#9575cd,#512da8)"></div>Análisis y Control</div>
+  </div>
+
+  <div class="footer">
+    Elaborado por: Jefe Comercial · Inmobiliaria Santorini &nbsp;|&nbsp; 🏁 = Hito / Entregable
+  </div>
+
+</div>
+</body>
+</html>
